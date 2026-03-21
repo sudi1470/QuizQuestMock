@@ -1,0 +1,19 @@
+{
+  "expo": {
+    "name": "QuizQuest",
+    "slug": "quizquest",
+    "scheme": "quizquest",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "plugins": [
+      "expo-router"
+    ]
+  }
+}
