@@ -15,7 +15,7 @@ export interface MatchReadyBody {
 export interface SubmitAnswerBody {
   matchId: string;
   questionSequence: number;
-  selectedAnswer: AnswerOption;
+  selectedAnswer?: AnswerOption | null;
   responseTimeMs: number;
 }
 

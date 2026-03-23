@@ -37,6 +37,17 @@ export interface MatchSummary {
   expiresAt: string | null;
 }
 
+export interface MatchCompetitor {
+  userId: string | null;
+  username: string;
+  avatar: string | null;
+  level: number;
+  xp: number;
+  finalScore: number;
+  isGhost: boolean;
+  outcome: MatchOutcome;
+}
+
 export interface MatchQuestionView {
   id: string;
   sequence: number;
@@ -48,7 +59,7 @@ export interface MatchQuestionView {
 export interface AnswerSubmission {
   matchId: string;
   questionSequence: number;
-  selectedAnswer: AnswerOption;
+  selectedAnswer?: AnswerOption | null;
   responseTimeMs: number;
   submittedAtClient: string;
 }
@@ -56,9 +67,18 @@ export interface AnswerSubmission {
 export interface GhostPlaybackFrame {
   questionSequence: number;
   answerOffsetMs: number;
-  selectedAnswer: AnswerOption;
+  selectedAnswer: AnswerOption | null;
   awardedScore: number;
   cumulativeScore: number;
+}
+
+export interface MatchResult {
+  player: MatchCompetitor;
+  opponent: MatchCompetitor;
+  winnerUserId: string | null;
+  isDraw: boolean;
+  xpDelta: number;
+  ratingDelta: number;
 }
 
 export interface RatingDelta {

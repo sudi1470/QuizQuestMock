@@ -2,6 +2,31 @@ import * as Linking from "expo-linking";
 import { supabase } from "@/lib/supabase";
 
 export function useAuth() {
+  async function ensureDemoSession() {
+    const { data: sessionData } = await supabase.auth.getSession();
+    if (sessionData.session?.user) {
+      return { data: sessionData.session.user, error: null };
+    }
+
+    const guestSuffix = Math.floor(1000 + Math.random() * 9000);
+    const guestUsername = `guest${guestSuffix}`;
+    const result = await supabase.auth.signInAnonymously({
+      options: {
+        data: {
+          user_name: guestUsername,
+        },
+      },
+    });
+
+    const user = result.data.user;
+    if (result.error || !user) {
+      return result;
+    }
+
+    await supabase.from("profiles").update({ username: guestUsername }).eq("id", user.id);
+    return result;
+  }
+
   async function signInWithEmail(email: string, password: string) {
     return supabase.auth.signInWithPassword({ email, password });
   }
@@ -36,6 +61,7 @@ export function useAuth() {
   }
 
   return {
+    ensureDemoSession,
     signInWithEmail,
     signUpWithEmail,
     signInWithGoogle,

@@ -1,0 +1,562 @@
+[
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question_text": "What is the capital of Australia?",
+    "option_a": "Sydney",
+    "option_b": "Melbourne",
+    "option_c": "Canberra",
+    "option_d": "Perth",
+    "correct_answer": "C"
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question_text": "Which desert is the largest hot desert in the world?",
+    "option_a": "Gobi Desert",
+    "option_b": "Sahara Desert",
+    "option_c": "Kalahari Desert",
+    "option_d": "Arabian Desert",
+    "correct_answer": "B"
+  },
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question_text": "Which is the longest river in the world?",
+    "option_a": "Amazon River",
+    "option_b": "Nile River",
+    "option_c": "Yangtze River",
+    "option_d": "Mississippi River",
+    "correct_answer": "B"
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question_text": "Mount Kilimanjaro is located in which country?",
+    "option_a": "Kenya",
+    "option_b": "Tanzania",
+    "option_c": "Ethiopia",
+    "option_d": "Uganda",
+    "correct_answer": "B"
+  },
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question_text": "Which ocean is the largest?",
+    "option_a": "Atlantic Ocean",
+    "option_b": "Indian Ocean",
+    "option_c": "Arctic Ocean",
+    "option_d": "Pacific Ocean",
+    "correct_answer": "D"
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question_text": "Which country has the most population in the world?",
+    "option_a": "India",
+    "option_b": "USA",
+    "option_c": "China",
+    "option_d": "Indonesia",
+    "correct_answer": "A"
+  },
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question_text": "Which continent is known as the Dark Continent?",
+    "option_a": "Asia",
+    "option_b": "Africa",
+    "option_c": "South America",
+    "option_d": "Australia",
+    "correct_answer": "B"
+  },
+  {
+    "category": "History",
+    "difficulty": "easy",
+    "question_text": "Who was the first President of the United States?",
+    "option_a": "Abraham Lincoln",
+    "option_b": "George Washington",
+    "option_c": "Thomas Jefferson",
+    "option_d": "John Adams",
+    "correct_answer": "B"
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question_text": "In which year did World War II end?",
+    "option_a": "1942",
+    "option_b": "1945",
+    "option_c": "1939",
+    "option_d": "1950",
+    "correct_answer": "B"
+  },
+  {
+    "category": "History",
+    "difficulty": "easy",
+    "question_text": "Who discovered America in 1492?",
+    "option_a": "Vasco da Gama",
+    "option_b": "Christopher Columbus",
+    "option_c": "Ferdinand Magellan",
+    "option_d": "Marco Polo",
+    "correct_answer": "B"
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question_text": "The Great Wall of China was primarily built to protect against which group?",
+    "option_a": "Mongols",
+    "option_b": "Romans",
+    "option_c": "Vikings",
+    "option_d": "Huns",
+    "correct_answer": "A"
+  },
+  {
+    "category": "History",
+    "difficulty": "easy",
+    "question_text": "Who was known as the Iron Lady?",
+    "option_a": "Angela Merkel",
+    "option_b": "Margaret Thatcher",
+    "option_c": "Indira Gandhi",
+    "option_d": "Golda Meir",
+    "correct_answer": "B"
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question_text": "Which empire was ruled by Genghis Khan?",
+    "option_a": "Roman Empire",
+    "option_b": "Ottoman Empire",
+    "option_c": "Mongol Empire",
+    "option_d": "Persian Empire",
+    "correct_answer": "C"
+  },
+  {
+    "category": "History",
+    "difficulty": "easy",
+    "question_text": "In which country did the Renaissance begin?",
+    "option_a": "France",
+    "option_b": "Germany",
+    "option_c": "Italy",
+    "option_d": "Spain",
+    "correct_answer": "C"
+  },
+  {
+    "category": "Science",
+    "difficulty": "easy",
+    "question_text": "What planet is known as the Red Planet?",
+    "option_a": "Venus",
+    "option_b": "Mars",
+    "option_c": "Jupiter",
+    "option_d": "Saturn",
+    "correct_answer": "B"
+  },
+  {
+    "category": "Science",
+    "difficulty": "medium",
+    "question_text": "What is the speed of light in vacuum?",
+    "option_a": "300,000 km/s",
+    "option_b": "150,000 km/s",
+    "option_c": "1,000 km/s",
+    "option_d": "3,000 km/s",
+    "correct_answer": "A"
+  },
+  {
+    "category": "Science",
+    "difficulty": "easy",
+    "question_text": "What is H2O commonly known as?",
+    "option_a": "Oxygen",
+    "option_b": "Hydrogen",
+    "option_c": "Water",
+    "option_d": "Salt",
+    "correct_answer": "C"
+  },
+  {
+    "category": "Science",
+    "difficulty": "medium",
+    "question_text": "What is the powerhouse of the cell?",
+    "option_a": "Nucleus",
+    "option_b": "Mitochondria",
+    "option_c": "Ribosome",
+    "option_d": "Chloroplast",
+    "correct_answer": "B"
+  },
+  {
+    "category": "Science",
+    "difficulty": "easy",
+    "question_text": "Which planet is closest to the Sun?",
+    "option_a": "Venus",
+    "option_b": "Mercury",
+    "option_c": "Earth",
+    "option_d": "Mars",
+    "correct_answer": "B"
+  },
+  {
+    "category": "Science",
+    "difficulty": "medium",
+    "question_text": "What type of energy is stored in a battery?",
+    "option_a": "Kinetic Energy",
+    "option_b": "Thermal Energy",
+    "option_c": "Chemical Energy",
+    "option_d": "Nuclear Energy",
+    "correct_answer": "C"
+  },
+  {
+    "category": "Science",
+    "difficulty": "easy",
+    "question_text": "Which gas is most abundant in Earth's atmosphere?",
+    "option_a": "Oxygen",
+    "option_b": "Carbon Dioxide",
+    "option_c": "Nitrogen",
+    "option_d": "Hydrogen",
+    "correct_answer": "C"
+  },
+  {
+    "category": "Movies",
+    "difficulty": "easy",
+    "question_text": "Which movie features the character Jack Sparrow?",
+    "option_a": "Harry Potter",
+    "option_b": "Pirates of the Caribbean",
+    "option_c": "The Lord of the Rings",
+    "option_d": "Avatar",
+    "correct_answer": "B"
+  },
+  {
+    "category": "Movies",
+    "difficulty": "medium",
+    "question_text": "Which movie won the Oscar for Best Picture in 2020?",
+    "option_a": "1917",
+    "option_b": "Joker",
+    "option_c": "Parasite",
+    "option_d": "Ford v Ferrari",
+    "correct_answer": "C"
+  },
+  {
+    "category": "Movies",
+    "difficulty": "easy",
+    "question_text": "Which movie features dinosaurs brought back to life?",
+    "option_a": "King Kong",
+    "option_b": "Jurassic Park",
+    "option_c": "Godzilla",
+    "option_d": "Avatar",
+    "correct_answer": "B"
+  },
+  {
+    "category": "Movies",
+    "difficulty": "medium",
+    "question_text": "Who played the Joker in The Dark Knight (2008)?",
+    "option_a": "Joaquin Phoenix",
+    "option_b": "Jared Leto",
+    "option_c": "Heath Ledger",
+    "option_d": "Jack Nicholson",
+    "correct_answer": "C"
+  },
+  {
+    "category": "Movies",
+    "difficulty": "easy",
+    "question_text": "Which movie is about a sinking ship and a tragic love story?",
+    "option_a": "Avatar",
+    "option_b": "Titanic",
+    "option_c": "Inception",
+    "option_d": "Gladiator",
+    "correct_answer": "B"
+  },
+  {
+    "category": "Movies",
+    "difficulty": "medium",
+    "question_text": "Which film series features Frodo Baggins?",
+    "option_a": "Harry Potter",
+    "option_b": "The Hobbit",
+    "option_c": "The Lord of the Rings",
+    "option_d": "Star Wars",
+    "correct_answer": "C"
+  },
+  {
+    "category": "Movies",
+    "difficulty": "easy",
+    "question_text": "Which animated movie features a talking snowman named Olaf?",
+    "option_a": "Moana",
+    "option_b": "Frozen",
+    "option_c": "Tangled",
+    "option_d": "Coco",
+    "correct_answer": "B"
+  },
+  {
+    "category": "General Knowledge",
+    "difficulty": "easy",
+    "question_text": "Which is the largest mammal in the world?",
+    "option_a": "Elephant",
+    "option_b": "Blue Whale",
+    "option_c": "Giraffe",
+    "option_d": "Hippopotamus",
+    "correct_answer": "B"
+  },
+  {
+    "category": "General Knowledge",
+    "difficulty": "medium",
+    "question_text": "How many continents are there on Earth?",
+    "option_a": "5",
+    "option_b": "6",
+    "option_c": "7",
+    "option_d": "8",
+    "correct_answer": "C"
+  },
+  {
+    "category": "General Knowledge",
+    "difficulty": "easy",
+    "question_text": "Which bird is known for its ability to mimic sounds?",
+    "option_a": "Parrot",
+    "option_b": "Eagle",
+    "option_c": "Sparrow",
+    "option_d": "Pigeon",
+    "correct_answer": "A"
+  },
+  {
+    "category": "General Knowledge",
+    "difficulty": "medium",
+    "question_text": "Which is the largest organ in the human body?",
+    "option_a": "Heart",
+    "option_b": "Liver",
+    "option_c": "Skin",
+    "option_d": "Brain",
+    "correct_answer": "C"
+  },
+  {
+    "category": "General Knowledge",
+    "difficulty": "easy",
+    "question_text": "How many colors are there in a rainbow?",
+    "option_a": "5",
+    "option_b": "6",
+    "option_c": "7",
+    "option_d": "8",
+    "correct_answer": "C"
+  },
+  {
+    "category": "General Knowledge",
+    "difficulty": "medium",
+    "question_text": "Which country is known as the Land of the Rising Sun?",
+    "option_a": "China",
+    "option_b": "Japan",
+    "option_c": "Thailand",
+    "option_d": "South Korea",
+    "correct_answer": "B"
+  },
+  {
+    "category": "General Knowledge",
+    "difficulty": "easy",
+    "question_text": "What do bees produce?",
+    "option_a": "Milk",
+    "option_b": "Honey",
+    "option_c": "Wax",
+    "option_d": "Oil",
+    "correct_answer": "B"
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question_text": "What does CPU stand for?",
+    "option_a": "Central Process Unit",
+    "option_b": "Central Processing Unit",
+    "option_c": "Computer Personal Unit",
+    "option_d": "Central Power Unit",
+    "correct_answer": "B"
+  },
+  {
+    "category": "Technology",
+    "difficulty": "medium",
+    "question_text": "Which company developed the Android operating system?",
+    "option_a": "Apple",
+    "option_b": "Microsoft",
+    "option_c": "Google",
+    "option_d": "IBM",
+    "correct_answer": "C"
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question_text": "What does RAM stand for?",
+    "option_a": "Random Access Memory",
+    "option_b": "Read Access Memory",
+    "option_c": "Run Access Memory",
+    "option_d": "Real Access Memory",
+    "correct_answer": "A"
+  },
+  {
+    "category": "Technology",
+    "difficulty": "medium",
+    "question_text": "Which programming language is primarily used for web page styling?",
+    "option_a": "HTML",
+    "option_b": "Python",
+    "option_c": "CSS",
+    "option_d": "C++",
+    "correct_answer": "C"
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question_text": "What does URL stand for?",
+    "option_a": "Uniform Resource Locator",
+    "option_b": "Universal Resource Link",
+    "option_c": "Uniform Reference Link",
+    "option_d": "Universal Reference Locator",
+    "correct_answer": "A"
+  },
+  {
+    "category": "Technology",
+    "difficulty": "medium",
+    "question_text": "Which company created the iPhone?",
+    "option_a": "Samsung",
+    "option_b": "Apple",
+    "option_c": "Google",
+    "option_d": "Microsoft",
+    "correct_answer": "B"
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question_text": "What is the brain of the computer?",
+    "option_a": "RAM",
+    "option_b": "Hard Drive",
+    "option_c": "CPU",
+    "option_d": "GPU",
+    "correct_answer": "C"
+  },
+  {
+    "category": "Sports",
+    "difficulty": "easy",
+    "question_text": "How many players are there in a football (soccer) team on the field?",
+    "option_a": "9",
+    "option_b": "10",
+    "option_c": "11",
+    "option_d": "12",
+    "correct_answer": "C"
+  },
+  {
+    "category": "Sports",
+    "difficulty": "medium",
+    "question_text": "Which country won the FIFA World Cup in 2018?",
+    "option_a": "Germany",
+    "option_b": "Brazil",
+    "option_c": "France",
+    "option_d": "Argentina",
+    "correct_answer": "C"
+  },
+  {
+    "category": "Sports",
+    "difficulty": "easy",
+    "question_text": "Which sport uses a racket and a shuttlecock?",
+    "option_a": "Tennis",
+    "option_b": "Badminton",
+    "option_c": "Squash",
+    "option_d": "Table Tennis",
+    "correct_answer": "B"
+  },
+  {
+    "category": "Sports",
+    "difficulty": "medium",
+    "question_text": "In cricket, how many runs are awarded for hitting the ball over the boundary without bouncing?",
+    "option_a": "4",
+    "option_b": "5",
+    "option_c": "6",
+    "option_d": "3",
+    "correct_answer": "C"
+  },
+  {
+    "category": "Sports",
+    "difficulty": "easy",
+    "question_text": "Which country is famous for sumo wrestling?",
+    "option_a": "China",
+    "option_b": "Japan",
+    "option_c": "South Korea",
+    "option_d": "Thailand",
+    "correct_answer": "B"
+  },
+  {
+    "category": "Sports",
+    "difficulty": "medium",
+    "question_text": "How many rings are there in the Olympic symbol?",
+    "option_a": "4",
+    "option_b": "5",
+    "option_c": "6",
+    "option_d": "7",
+    "correct_answer": "B"
+  },
+  {
+    "category": "Sports",
+    "difficulty": "easy",
+    "question_text": "Which sport is known as the 'king of sports'?",
+    "option_a": "Cricket",
+    "option_b": "Basketball",
+    "option_c": "Football",
+    "option_d": "Tennis",
+    "correct_answer": "C"
+  },
+  {
+    "category": "Food",
+    "difficulty": "easy",
+    "question_text": "What is the main ingredient in sushi?",
+    "option_a": "Bread",
+    "option_b": "Rice",
+    "option_c": "Potato",
+    "option_d": "Noodles",
+    "correct_answer": "B"
+  },
+  {
+    "category": "Food",
+    "difficulty": "medium",
+    "question_text": "Which country is famous for the dish 'Paella'?",
+    "option_a": "Italy",
+    "option_b": "Spain",
+    "option_c": "France",
+    "option_d": "Mexico",
+    "correct_answer": "B"
+  },
+  {
+    "category": "Food",
+    "difficulty": "easy",
+    "question_text": "Which fruit is known as the king of fruits in India?",
+    "option_a": "Apple",
+    "option_b": "Banana",
+    "option_c": "Mango",
+    "option_d": "Orange",
+    "correct_answer": "C"
+  },
+  {
+    "category": "Food",
+    "difficulty": "medium",
+    "question_text": "Which country is the origin of pizza?",
+    "option_a": "France",
+    "option_b": "Italy",
+    "option_c": "USA",
+    "option_d": "Greece",
+    "correct_answer": "B"
+  },
+  {
+    "category": "Food",
+    "difficulty": "easy",
+    "question_text": "What is tofu made from?",
+    "option_a": "Milk",
+    "option_b": "Soybeans",
+    "option_c": "Wheat",
+    "option_d": "Rice",
+    "correct_answer": "B"
+  },
+  {
+    "category": "Food",
+    "difficulty": "medium",
+    "question_text": "Which vitamin is primarily found in citrus fruits?",
+    "option_a": "Vitamin A",
+    "option_b": "Vitamin B12",
+    "option_c": "Vitamin C",
+    "option_d": "Vitamin D",
+    "correct_answer": "C"
+  },
+  {
+    "category": "Food",
+    "difficulty": "easy",
+    "question_text": "What is the main ingredient in bread?",
+    "option_a": "Rice",
+    "option_b": "Flour",
+    "option_c": "Corn",
+    "option_d": "Oats",
+    "correct_answer": "B"
+  }
+]

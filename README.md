@@ -25,3 +25,13 @@ QuizQuest is a QuizUp-inspired 1v1 trivia game with live and ghost matches. This
 2. Create a Supabase project and apply `supabase/migrations/0001_init.sql`.
 3. Populate `.env` from `.env.example`.
 4. Run `npx expo start`.
+
+## Demo auth requirement
+
+For the guest ghost-match demo flow, enable anonymous sign-ins in Supabase:
+
+1. Open `Authentication` in your Supabase dashboard.
+2. Open `Providers`.
+3. Enable `Anonymous Sign-Ins`.
+
+Without that setting, the demo lobby can render categories but cannot create guest sessions or start protected Edge Function flows.

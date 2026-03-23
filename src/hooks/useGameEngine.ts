@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { QUESTION_TIME_LIMIT_MS } from "@/lib/constants";
 import { supabase } from "@/lib/supabase";
 import { useGameStore } from "@/store/game-store";
-import type { GhostPlaybackFrame, MatchQuestionView, MatchSummary } from "@/types/domain";
+import type { GhostPlaybackFrame, MatchCompetitor, MatchQuestionView, MatchResult, MatchSummary } from "@/types/domain";
 
 function toQuestionView(row: any): MatchQuestionView {
   return {
@@ -38,6 +38,7 @@ export function useGameEngine() {
   const tick = useGameStore((store) => store.tick);
   const setState = useGameStore((store) => store.setState);
   const setScores = useGameStore((store) => store.setScores);
+  const resultStore = useGameStore((store) => store.result);
 
   const matchQuery = useQuery({
     enabled: !!matchId,
@@ -56,24 +57,20 @@ export function useGameEngine() {
         participants: any[];
         questions: any[];
         answers: any[];
+        ghostFrames: GhostPlaybackFrame[];
+        playerScore: number;
+        opponentScore: number;
+        player: MatchCompetitor | null;
+        opponent: MatchCompetitor | null;
+        result: MatchResult | null;
       };
     },
-    refetchInterval: 3000,
+    refetchInterval: 1000,
   });
 
   const ghostFrames = useMemo<GhostPlaybackFrame[]>(() => {
-    const answers = matchQuery.data?.answers ?? [];
-    const ghostUserId = matchQuery.data?.participants?.find((participant) => participant.is_ghost)?.user_id;
-    return answers
-      .filter((answer) => answer.user_id === ghostUserId)
-      .map((answer) => ({
-        questionSequence: answer.question_sequence,
-        answerOffsetMs: answer.answered_at_offset_ms,
-        selectedAnswer: answer.selected_answer,
-        awardedScore: answer.score_awarded,
-        cumulativeScore: answer.cumulative_score,
-      }));
-  }, [matchQuery.data?.answers, matchQuery.data?.participants]);
+    return matchQuery.data?.ghostFrames ?? [];
+  }, [matchQuery.data?.ghostFrames]);
 
   useEffect(() => {
     if (!matchQuery.data?.match) {
@@ -83,7 +80,7 @@ export function useGameEngine() {
     const summary: MatchSummary = {
       id: matchQuery.data.match.id,
       categoryId: matchQuery.data.match.category_id,
-      categoryName: matchQuery.data.match.metadata?.categoryName ?? "Category",
+      categoryName: matchQuery.data.match.category_name ?? matchQuery.data.match.metadata?.categoryName ?? "Category",
       matchType: matchQuery.data.match.match_type,
       mode: matchQuery.data.match.mode,
       state: matchQuery.data.match.state,
@@ -95,8 +92,15 @@ export function useGameEngine() {
     };
 
     const questions = (matchQuery.data.questions ?? []).map(toQuestionView);
-    setMatchPayload({ summary, questions, ghostFrames });
-  }, [ghostFrames, matchQuery.data?.match, matchQuery.data?.questions, setMatchPayload]);
+    setMatchPayload({
+      summary,
+      questions,
+      ghostFrames,
+      playerScore: matchQuery.data.playerScore,
+      opponentScore: matchQuery.data.opponentScore,
+      result: matchQuery.data.result,
+    });
+  }, [ghostFrames, matchQuery.data, setMatchPayload]);
 
   useEffect(() => {
     if (!summary?.questionStartedAt) {
@@ -143,6 +147,9 @@ export function useGameEngine() {
     localAnswerLocked,
     playerScore,
     opponentScore,
+    result: matchQuery.data?.result ?? resultStore,
+    player: matchQuery.data?.player ?? null,
+    opponent: matchQuery.data?.opponent ?? null,
     currentQuestion,
     matchId,
     mode: summary?.mode ?? "live",
