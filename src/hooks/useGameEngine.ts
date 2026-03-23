@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 
@@ -30,7 +30,7 @@ export function useGameEngine() {
   const currentQuestionIndex = useGameStore((state) => state.currentQuestion);
   const countdownMs = useGameStore((state) => state.countdownMs);
   const state = useGameStore((store) => store.state);
-  const localAnswerLocked = useGameStore((store) => store.localAnswerLocked);
+  const lockedQuestionSequence = useGameStore((store) => store.lockedQuestionSequence);
   const playerScore = useGameStore((store) => store.playerScore);
   const opponentScore = useGameStore((store) => store.opponentScore);
   const ghostFramesStore = useGameStore((store) => store.ghostFrames);
@@ -39,6 +39,7 @@ export function useGameEngine() {
   const setState = useGameStore((store) => store.setState);
   const setScores = useGameStore((store) => store.setScores);
   const resultStore = useGameStore((store) => store.result);
+  const seenQuestionAtRef = useRef<Record<string, number>>({});
 
   const matchQuery = useQuery({
     enabled: !!matchId,
@@ -107,14 +108,26 @@ export function useGameEngine() {
       return;
     }
 
+    const questionKey = `${summary.id}:${summary.currentQuestion}:${summary.questionStartedAt}`;
+    if (!seenQuestionAtRef.current[questionKey]) {
+      seenQuestionAtRef.current[questionKey] = Date.now();
+    }
+
     const questionStartedAt = new Date(summary.questionStartedAt).getTime();
+    const visibleAt = seenQuestionAtRef.current[questionKey];
+    const updateCountdown = () => {
+      const effectiveStart = Math.max(questionStartedAt, visibleAt);
+      const elapsed = Date.now() - effectiveStart;
+      tick(Math.min(QUESTION_TIME_LIMIT_MS, Math.max(0, QUESTION_TIME_LIMIT_MS - elapsed)));
+    };
+
+    updateCountdown();
     const interval = setInterval(() => {
-      const elapsed = Date.now() - questionStartedAt;
-      tick(Math.max(0, QUESTION_TIME_LIMIT_MS - elapsed));
+      updateCountdown();
     }, 250);
 
     return () => clearInterval(interval);
-  }, [summary?.questionStartedAt, tick]);
+  }, [summary?.currentQuestion, summary?.id, summary?.questionStartedAt, tick]);
 
   useEffect(() => {
     const channel = supabase
@@ -136,6 +149,7 @@ export function useGameEngine() {
   }, [currentQuestionIndex, matchId, setScores, setState]);
 
   const currentQuestion = questions.find((question) => question.sequence === currentQuestionIndex) ?? questions[0];
+  const localAnswerLocked = !!currentQuestion && lockedQuestionSequence === currentQuestion.sequence;
 
   return {
     summary,

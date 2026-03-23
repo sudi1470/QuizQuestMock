@@ -9,7 +9,7 @@ interface GameStore {
   currentQuestion: number;
   countdownMs: number;
   state: MatchState;
-  localAnswerLocked: boolean;
+  lockedQuestionSequence: number | null;
   playerScore: number;
   opponentScore: number;
   lastScoreDelta: number;
@@ -24,7 +24,7 @@ interface GameStore {
   }) => void;
   tick: (countdownMs: number) => void;
   setState: (state: MatchState, currentQuestion?: number) => void;
-  lockAnswer: () => void;
+  lockAnswer: (questionSequence: number) => void;
   unlockAnswer: () => void;
   setScores: (playerScore: number, opponentScore: number) => void;
   setLastScoreDelta: (scoreDelta: number) => void;
@@ -38,7 +38,7 @@ const initialState = {
   currentQuestion: 1,
   countdownMs: 10_000,
   state: "waiting" as MatchState,
-  localAnswerLocked: false,
+  lockedQuestionSequence: null,
   playerScore: 0,
   opponentScore: 0,
   lastScoreDelta: 0,
@@ -54,15 +54,15 @@ export const useGameStore = create<GameStore>((set) => ({
       ghostFrames,
       state: summary.state,
       currentQuestion: Math.max(summary.currentQuestion, 1),
-      localAnswerLocked: false,
+      lockedQuestionSequence: null,
       playerScore: playerScore ?? initialState.playerScore,
       opponentScore: opponentScore ?? initialState.opponentScore,
       result: result ?? null,
     }),
   tick: (countdownMs) => set({ countdownMs }),
-  setState: (state, currentQuestion) => set({ state, currentQuestion: currentQuestion ?? 1, localAnswerLocked: false }),
-  lockAnswer: () => set({ localAnswerLocked: true }),
-  unlockAnswer: () => set({ localAnswerLocked: false }),
+  setState: (state, currentQuestion) => set({ state, currentQuestion: currentQuestion ?? 1, lockedQuestionSequence: null }),
+  lockAnswer: (questionSequence) => set({ lockedQuestionSequence: questionSequence }),
+  unlockAnswer: () => set({ lockedQuestionSequence: null }),
   setScores: (playerScore, opponentScore) => set({ playerScore, opponentScore }),
   setLastScoreDelta: (lastScoreDelta) => set({ lastScoreDelta }),
   reset: () => set(initialState),

@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { router } from "expo-router";
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
 
@@ -15,10 +15,14 @@ const answerOptions: AnswerOption[] = ["A", "B", "C", "D"];
 export default function BattleScreen() {
   const { currentQuestion, countdownMs, ghostFrames, isLoading, matchId, mode, playerScore, opponentScore, state, result, player, opponent, refetch } =
     useGameEngine();
-  const localAnswerLocked = useGameStore((store) => store.localAnswerLocked);
-  const lockAnswer = useGameStore((store) => store.lockAnswer);
   const lastScoreDelta = useGameStore((store) => store.lastScoreDelta);
   const setLastScoreDelta = useGameStore((store) => store.setLastScoreDelta);
+  const timeoutReadyQuestionsRef = useRef<Record<string, boolean>>({});
+  const submittingQuestionSequenceRef = useRef<number | null>(null);
+  const [submittingQuestionSequence, setSubmittingQuestionSequence] = useState<number | null>(null);
+
+  const currentQuestionKey = currentQuestion ? `${matchId}:${currentQuestion.sequence}` : null;
+  const localAnswerLocked = !!currentQuestion && submittingQuestionSequence === currentQuestion.sequence;
 
   const ghostProjection = useMemo(() => {
     if (!currentQuestion) {
@@ -32,12 +36,38 @@ export default function BattleScreen() {
   }, [countdownMs, currentQuestion, ghostFrames, opponentScore]);
 
   useEffect(() => {
-    if (!currentQuestion || localAnswerLocked || state === "complete" || state === "results" || countdownMs > 0) {
+    if (!currentQuestionKey) {
       return;
     }
 
+    if (countdownMs > 0) {
+      timeoutReadyQuestionsRef.current[currentQuestionKey] = true;
+    }
+  }, [countdownMs, currentQuestionKey]);
+
+  useEffect(() => {
+    if (!currentQuestion || submittingQuestionSequence === null) {
+      return;
+    }
+
+    if (currentQuestion.sequence !== submittingQuestionSequence) {
+      submittingQuestionSequenceRef.current = null;
+      setSubmittingQuestionSequence(null);
+    }
+  }, [currentQuestion, submittingQuestionSequence]);
+
+  useEffect(() => {
+    if (!currentQuestion || !currentQuestionKey || localAnswerLocked || state === "complete" || state === "results" || countdownMs > 0) {
+      return;
+    }
+
+    if (!timeoutReadyQuestionsRef.current[currentQuestionKey]) {
+      return;
+    }
+
+    timeoutReadyQuestionsRef.current[currentQuestionKey] = false;
     void submitAnswer(null);
-  }, [countdownMs, currentQuestion, localAnswerLocked, state]);
+  }, [countdownMs, currentQuestion, currentQuestionKey, localAnswerLocked, state]);
 
   if (isLoading || !currentQuestion) {
     return (
@@ -48,21 +78,35 @@ export default function BattleScreen() {
   }
 
   async function submitAnswer(selectedAnswer: AnswerOption | null) {
-    if (localAnswerLocked || !matchId) {
+    if (!matchId || !currentQuestion || submittingQuestionSequenceRef.current === currentQuestion.sequence) {
       return;
     }
 
-    lockAnswer();
-    const { data } = await supabase.functions.invoke("submit-answer", {
-      body: {
-        matchId,
-        questionSequence: currentQuestion.sequence,
-        selectedAnswer,
-        responseTimeMs: 10_000 - countdownMs,
-      },
-    });
-    setLastScoreDelta(data?.awardedScore ?? 0);
-    await refetch();
+    const questionSequence = currentQuestion.sequence;
+    submittingQuestionSequenceRef.current = questionSequence;
+    setSubmittingQuestionSequence(questionSequence);
+
+    try {
+      const { data, error } = await supabase.functions.invoke("submit-answer", {
+        body: {
+          matchId,
+          questionSequence,
+          selectedAnswer,
+          responseTimeMs: 10_000 - countdownMs,
+        },
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      setLastScoreDelta(data?.awardedScore ?? 0);
+      await refetch();
+    } catch (error) {
+      submittingQuestionSequenceRef.current = null;
+      setSubmittingQuestionSequence(null);
+      console.error("Failed to submit answer", error);
+    }
   }
 
   if (result && (state === "complete" || state === "results")) {

@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { House, Trophy, Users, User } from "lucide-react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function TabsLayout() {
   return (
@@ -18,28 +18,28 @@ export default function TabsLayout() {
         name="lobby"
         options={{
           title: "Lobby",
-          tabBarIcon: ({ color, size }) => <House color={color} size={size} />,
+          tabBarIcon: ({ color, size }) => <Ionicons name="home-outline" color={color} size={size} />,
         }}
       />
       <Tabs.Screen
         name="friends"
         options={{
           title: "Friends",
-          tabBarIcon: ({ color, size }) => <Users color={color} size={size} />,
+          tabBarIcon: ({ color, size }) => <Ionicons name="people-outline" color={color} size={size} />,
         }}
       />
       <Tabs.Screen
         name="leaderboards"
         options={{
           title: "Ranks",
-          tabBarIcon: ({ color, size }) => <Trophy color={color} size={size} />,
+          tabBarIcon: ({ color, size }) => <Ionicons name="trophy-outline" color={color} size={size} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: "Profile",
-          tabBarIcon: ({ color, size }) => <User color={color} size={size} />,
+          tabBarIcon: ({ color, size }) => <Ionicons name="person-outline" color={color} size={size} />,
         }}
       />
     </Tabs>
