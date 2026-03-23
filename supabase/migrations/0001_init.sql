@@ -333,9 +333,11 @@ create or replace function public.get_recent_question_ids(
   p_limit integer default 100
 )
 returns table (question_id uuid)
-language sql
+language plpgsql
 stable
 as $$
+begin
+  return query
   select ma.question_id
   from public.match_answers ma
   join public.questions q on q.id = ma.question_id
@@ -344,6 +346,7 @@ as $$
   group by ma.question_id
   order by max(ma.created_at) desc
   limit p_limit;
+end;
 $$;
 
 create or replace function public.select_match_questions(
@@ -363,8 +366,8 @@ as $$
 begin
   return query
   with recent_questions as (
-    select question_id
-    from public.get_recent_question_ids(p_user_id, p_category_id, 200)
+    select rq.question_id
+    from public.get_recent_question_ids(p_user_id, p_category_id, 200) rq
   ),
   desired_mix as (
     select * from (
@@ -372,59 +375,72 @@ begin
         ('easy'::public.difficulty_level, 2),
         ('medium'::public.difficulty_level, 3),
         ('hard'::public.difficulty_level, 2)
-    ) as dm(difficulty, quota)
+    ) as dm(difficulty_level, quota)
   ),
   primary_pool as (
     select
-      q.id as question_id,
-      q.difficulty,
+      q.id as candidate_question_id,
+      q.difficulty as candidate_difficulty,
       row_number() over (partition by q.difficulty order by random(), q.quality_score desc) as bucket_rank
     from public.questions q
     where q.category_id = p_category_id
       and q.is_active = true
-      and q.id not in (select question_id from recent_questions)
+      and q.id not in (select rq.question_id from recent_questions rq)
+  ),
+  primary_choice as (
+    select
+      pp.candidate_question_id,
+      pp.candidate_difficulty
+    from primary_pool pp
+    join desired_mix dm on dm.difficulty_level = pp.candidate_difficulty
+    where pp.bucket_rank <= dm.quota
   ),
   fallback_pool as (
     select
-      q.id as question_id,
-      q.difficulty,
+      q.id as candidate_question_id,
+      q.difficulty as candidate_difficulty,
       row_number() over (partition by q.difficulty order by random(), q.quality_score desc) as bucket_rank
     from public.questions q
     where q.category_id = p_category_id
       and q.is_active = true
   ),
-  chosen as (
-    select pp.question_id, pp.difficulty
-    from primary_pool pp
-    join desired_mix dm on dm.difficulty = pp.difficulty
-    where pp.bucket_rank <= dm.quota
-    union
-    select fp.question_id, fp.difficulty
+  fallback_choice as (
+    select
+      fp.candidate_question_id,
+      fp.candidate_difficulty
     from fallback_pool fp
-    where fp.question_id not in (
-      select question_id from primary_pool pp2
-      join desired_mix dm2 on dm2.difficulty = pp2.difficulty
-      where pp2.bucket_rank <= dm2.quota
+    where fp.candidate_question_id not in (
+      select pc.candidate_question_id
+      from primary_choice pc
     )
     order by random()
-    limit greatest(0, p_question_count - (
-      select count(*)
-      from primary_pool pp3
-      join desired_mix dm3 on dm3.difficulty = pp3.difficulty
-      where pp3.bucket_rank <= dm3.quota
-    ))
+    limit greatest(0, p_question_count - (select count(*) from primary_choice))
+  ),
+  chosen as (
+    select
+      pc.candidate_question_id,
+      pc.candidate_difficulty
+    from primary_choice pc
+    union
+    select
+      fc.candidate_question_id,
+      fc.candidate_difficulty
+    from fallback_choice fc
   ),
   numbered as (
     select
-      question_id,
-      difficulty,
-      row_number() over (order by random())::integer as sequence
-    from chosen
+      ch.candidate_question_id,
+      ch.candidate_difficulty,
+      row_number() over (order by random())::integer as question_sequence
+    from chosen ch
     limit p_question_count
   )
-  select question_id, difficulty, sequence
-  from numbered
-  order by sequence;
+  select
+    n.candidate_question_id as question_id,
+    n.candidate_difficulty as difficulty,
+    n.question_sequence as sequence
+  from numbered n
+  order by n.question_sequence;
 end;
 $$;
 

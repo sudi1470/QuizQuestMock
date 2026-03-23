@@ -1,28 +1,28 @@
 project_id = "quizquest"
 
 [functions.queue-join]
-verify_jwt = true
+verify_jwt = false
 
 [functions.queue-leave]
 verify_jwt = true
 
 [functions.match-ready]
-verify_jwt = true
+verify_jwt = false
 
 [functions.submit-answer]
-verify_jwt = true
+verify_jwt = false
 
 [functions.sync-match-state]
-verify_jwt = true
+verify_jwt = false
 
 [functions.rematch-request]
-verify_jwt = true
+verify_jwt = false
 
 [functions.friend-challenge-create]
-verify_jwt = true
+verify_jwt = false
 
 [functions.friend-challenge-respond]
-verify_jwt = true
+verify_jwt = false
 
 [functions.admin-ingest-questions]
-verify_jwt = true
+verify_jwt = false

@@ -109,7 +109,7 @@ Deno.serve(async (request) => {
       }
 
       if (playableGhost?.ghost_seed_user_id) {
-        const { data: matchId } = await supabase.rpc("create_match_with_questions", {
+        const { data: matchId, error: replayMatchError } = await supabase.rpc("create_match_with_questions", {
           p_category_id: body.categoryId,
           p_match_type: "async_random",
           p_mode: "ghost",
@@ -117,6 +117,10 @@ Deno.serve(async (request) => {
           p_player_two: user.id,
           p_source_match_id: playableGhost.id,
         });
+
+        if (replayMatchError || !matchId) {
+          return json({ error: replayMatchError?.message ?? "Unable to create replay ghost match" }, 500);
+        }
 
         const [{ data: sourceAnswers }, { data: ghostProfile }, { data: category }] = await Promise.all([
           supabase
@@ -168,7 +172,7 @@ Deno.serve(async (request) => {
         return json({ queue: queueRow, matched: true, matchId, mode: "ghost", demoGhost: false });
       }
 
-      const { data: seedMatchId } = await supabase.rpc("create_match_with_questions", {
+      const { data: seedMatchId, error: seedMatchError } = await supabase.rpc("create_match_with_questions", {
         p_category_id: body.categoryId,
         p_match_type: "async_random",
         p_mode: "ghost",
@@ -176,6 +180,10 @@ Deno.serve(async (request) => {
         p_player_two: null,
         p_source_match_id: null,
       });
+
+      if (seedMatchError || !seedMatchId) {
+        return json({ error: seedMatchError?.message ?? "Unable to create seed ghost match" }, 500);
+      }
 
       const [{ data: seedQuestions }, { data: category }] = await Promise.all([
         supabase
