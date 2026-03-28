@@ -29,6 +29,11 @@
 - Follow-up players receive the same `match_questions`.
 - Client simulates opponent score progression from stored answer offsets while server still evaluates only the active player.
 
+## Async challenges
+- A friend challenge is not surfaced to the recipient until the challenger completes all 7 questions.
+- If the challenger disconnects or abandons the run before completion, the pending challenge is discarded and never notified to the recipient.
+- This keeps async friend battles aligned with the same completed-seed ghost model used by random async matches.
+
 ## Scaling posture
 - Realtime is treated as a fanout layer, not the source of truth.
 - Queue and leaderboard reads are indexed for the main hot paths.

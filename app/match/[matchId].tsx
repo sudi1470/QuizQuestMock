@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { router } from "expo-router";
+import { MotiView } from "moti";
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
 
 import { ScoreBar } from "@/components/game/ScoreBar";
@@ -11,6 +12,51 @@ import { useGameStore } from "@/store/game-store";
 import type { AnswerOption } from "@/types/domain";
 
 const answerOptions: AnswerOption[] = ["A", "B", "C", "D"];
+const OPTION_REVEAL_DURATION_MS = 320;
+const OPTION_REVEAL_STAGGER_MS = 60;
+const ANSWER_READY_DELAY_MS = OPTION_REVEAL_DURATION_MS + OPTION_REVEAL_STAGGER_MS * (answerOptions.length - 1);
+
+interface RevealOptionProps {
+  option: AnswerOption;
+  label: string;
+  disabled: boolean;
+  revealKey: string;
+  index: number;
+  onPress: () => void;
+}
+
+function RevealOption({ option, label, disabled, revealKey, index, onPress }: RevealOptionProps) {
+  const [width, setWidth] = useState(0);
+
+  return (
+    <Pressable
+      disabled={disabled}
+      className={`relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4 ${disabled ? "opacity-70" : ""}`}
+      onLayout={(event) => setWidth(event.nativeEvent.layout.width)}
+      onPress={onPress}
+    >
+      <Text className="text-base font-medium text-white">
+        {option}. {label}
+      </Text>
+
+      {width > 0 ? (
+        <MotiView
+          key={`${revealKey}:${option}`}
+          className="absolute bottom-0 left-0 top-0 bg-ink"
+          from={{ translateX: 0 }}
+          animate={{ translateX: width }}
+          transition={{
+            delay: index * OPTION_REVEAL_STAGGER_MS,
+            duration: OPTION_REVEAL_DURATION_MS,
+            type: "timing",
+          }}
+          style={{ width }}
+          pointerEvents="none"
+        />
+      ) : null}
+    </Pressable>
+  );
+}
 
 export default function BattleScreen() {
   const { currentQuestion, countdownMs, ghostFrames, isLoading, matchId, mode, playerScore, opponentScore, state, result, player, opponent, refetch } =
@@ -19,10 +65,13 @@ export default function BattleScreen() {
   const setLastScoreDelta = useGameStore((store) => store.setLastScoreDelta);
   const timeoutReadyQuestionsRef = useRef<Record<string, boolean>>({});
   const submittingQuestionSequenceRef = useRef<number | null>(null);
+  const scoreDeltaDisplayIdRef = useRef(0);
   const [submittingQuestionSequence, setSubmittingQuestionSequence] = useState<number | null>(null);
+  const [answersReady, setAnswersReady] = useState(false);
+  const [scoreDeltaDisplay, setScoreDeltaDisplay] = useState<{ id: number; value: number } | null>(null);
 
   const currentQuestionKey = currentQuestion ? `${matchId}:${currentQuestion.sequence}` : null;
-  const localAnswerLocked = !!currentQuestion && submittingQuestionSequence === currentQuestion.sequence;
+  const localAnswerLocked = (!!currentQuestion && submittingQuestionSequence === currentQuestion.sequence) || !answersReady;
 
   const ghostProjection = useMemo(() => {
     if (!currentQuestion) {
@@ -34,6 +83,35 @@ export default function BattleScreen() {
     }
     return countdownMs <= 10_000 - frame.answerOffsetMs ? frame.cumulativeScore : opponentScore;
   }, [countdownMs, currentQuestion, ghostFrames, opponentScore]);
+
+  useEffect(() => {
+    if (!currentQuestionKey) {
+      return;
+    }
+
+    setAnswersReady(false);
+    const timer = setTimeout(() => {
+      setAnswersReady(true);
+    }, ANSWER_READY_DELAY_MS);
+
+    return () => clearTimeout(timer);
+  }, [currentQuestionKey]);
+
+  useEffect(() => {
+    if (lastScoreDelta <= 0) {
+      return;
+    }
+
+    scoreDeltaDisplayIdRef.current += 1;
+    const id = scoreDeltaDisplayIdRef.current;
+    setScoreDeltaDisplay({ id, value: lastScoreDelta });
+
+    const timer = setTimeout(() => {
+      setScoreDeltaDisplay((activeDisplay) => (activeDisplay?.id === id ? null : activeDisplay));
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [lastScoreDelta]);
 
   useEffect(() => {
     if (!currentQuestionKey) {
@@ -177,7 +255,21 @@ export default function BattleScreen() {
           <View className="rounded-2xl bg-white/5 p-4">
             <Text className="text-sm text-muted">Countdown</Text>
             <Text className="text-4xl font-bold text-white">{(countdownMs / 1000).toFixed(1)}s</Text>
-            {lastScoreDelta > 0 ? <Text className="mt-2 text-sm font-semibold text-success">+{lastScoreDelta} points</Text> : null}
+            <View className="relative mt-2 min-h-5 justify-center overflow-hidden">
+              <Text className="text-sm font-semibold text-transparent">+0000 points</Text>
+              {scoreDeltaDisplay ? (
+                <MotiView
+                  key={scoreDeltaDisplay.id}
+                  className="absolute inset-0 justify-center"
+                  from={{ opacity: 1 }}
+                  animate={{ opacity: 0 }}
+                  transition={{ duration: 3000, type: "timing" }}
+                  pointerEvents="none"
+                >
+                  <Text className="text-sm font-semibold text-success">+{scoreDeltaDisplay.value} points</Text>
+                </MotiView>
+              ) : null}
+            </View>
           </View>
         </View>
       </Card>
@@ -186,17 +278,16 @@ export default function BattleScreen() {
         <Text className="text-xs uppercase tracking-[2px] text-secondary">{currentQuestion.difficulty}</Text>
         <Text className="mt-3 text-2xl font-semibold text-white">{currentQuestion.prompt}</Text>
         <View className="mt-6 gap-3">
-          {answerOptions.map((option) => (
-            <Pressable
+          {answerOptions.map((option, index) => (
+            <RevealOption
               key={option}
+              option={option}
+              label={currentQuestion.options[option]}
               disabled={localAnswerLocked}
-              className={`rounded-2xl border border-white/10 bg-white/5 p-4 ${localAnswerLocked ? "opacity-60" : ""}`}
+              revealKey={currentQuestionKey ?? `${matchId}:unknown`}
+              index={index}
               onPress={() => void submitAnswer(option)}
-            >
-              <Text className="text-base font-medium text-white">
-                {option}. {currentQuestion.options[option]}
-              </Text>
-            </Pressable>
+            />
           ))}
         </View>
       </Card>
